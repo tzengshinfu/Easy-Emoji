@@ -1,0 +1,31 @@
+div.emoji-window {
+        position: absolute;
+        border: lightgray 1px solid;
+        width: 300px;
+        height: 150px;
+        display: none;
+        background:#e9ebee;
+        z-index: 2147483647;
+        overflow: scroll;
+        resize: both;
+    }
+
+.tip {
+    color:gray;
+    height:24px;
+}
+
+.keyword {
+    color:blue;
+}
+
+.brow {
+    cursor: pointer;
+    font-size: 300%;
+}
+
+.close {
+    cursor: pointer;
+    width:22px;
+    height:22px;
+}
