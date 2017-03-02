@@ -2419,7 +2419,7 @@ function getEmoji(keyword, callback) {
     var emojiTable = connection.objectStore("emojiTable");
     var keywordIndex = emojiTable.index("keyword");
     var brows = "";
-    var keyword = keyword.toLowerCase();
+    var keyword = keyword.trim().toLowerCase();
 
     var queryRequest = keywordIndex.openCursor(IDBKeyRange.bound(keyword, keyword + "\uffff"), //Thank to Fong-Wan Chau(http://stackoverflow.com/questions/7086180/indexeddb-fuzzy-search) 
         "next");
@@ -2434,11 +2434,25 @@ function getEmoji(keyword, callback) {
     }
 }
 
+var pageX, pageY;
+
 chrome.runtime.onMessage.addListener(
     function (message, sender, sendResponse) {
-        if (message.keyword.trim() !== "") {
+        if (typeof message.keyword !== "undefined") {
             getEmoji(message.keyword, sendResponse);
+        }
+
+        if (typeof message.pageX !== "undefined" && typeof message.pageY !== "undefined") {
+            pageX = message.pageX;
+            pageY = message.pageY;
         }
 
         return true; //持續開啟通道直到返回brows
     });
+
+chrome.contextMenus.create({ id: "Easy Emoji", title: chrome.i18n.getMessage("appOpenEmojiWindow"), contexts: ["all"] });
+chrome.contextMenus.onClicked.addListener(function (info, tab) {
+    chrome.tabs.executeScript({
+        code: "showEmojiWindow(" + pageX + ", " + pageY + ");"
+    });
+});

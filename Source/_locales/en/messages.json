@@ -3,6 +3,12 @@
     "message": "Easy Emoji"
   },
   "appDesc": {
-    "message": "Easy to find the emoji you want to send with a keyword."
+    "message": "Easy to find the emoji you want to copy just with a keyword."
+  },
+  "appOpenEmojiWindow": {
+    "message": "Open emoji window"
+  },
+  "appCopied": {
+    "message": "Copied!"
   }
 }

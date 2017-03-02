@@ -1,3 +1,7 @@
 Using emoji is more easily!
 
-You just need to long press, input a keyword, choose the emoji and completed.
+[Easy Emoji] is able to help you to find emoji and copy it.
+
+
+v1.1.0 Release Notes:
+-Click emoji to copy it to clipboard.
