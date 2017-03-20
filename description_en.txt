@@ -5,3 +5,7 @@ Using emoji is more easily!
 
 v1.1.0 Release Notes:
 -Click emoji to copy it to clipboard.
+
+v1.2.0 Release Notes:
+-Add emoji window draggable function.
+-Add search text clear button.

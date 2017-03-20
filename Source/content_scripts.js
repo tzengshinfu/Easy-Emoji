@@ -4,6 +4,9 @@ function addEmojiWindow() {
   emojiWindow = document.createElement("div");
   emojiWindow.id = "emoji-window";
   emojiWindow.className = "emoji-window";
+  emojiWindow.draggable = true;
+  let emojiWindowHead = document.createElement("div");
+  emojiWindowHead.style.display = "flex";
 
   searchTextBox = document.createElement("input");
   searchTextBox.id = "search-textbox";
@@ -14,16 +17,33 @@ function addEmojiWindow() {
   searchTextBox.addEventListener("keydown", showKeywordText);
   searchTextBox.addEventListener("keyup", showTipText);
   searchTextBox.addEventListener("keyup", getEmojiList);
-  emojiWindow.appendChild(searchTextBox);
+  let searchTextBoxContainer = document.createElement("div");
+  searchTextBoxContainer.appendChild(searchTextBox);
+  emojiWindowHead.appendChild(searchTextBoxContainer);
+
+  clearButton = document.createElement("img");
+  clearButton.src = chrome.extension.getURL("clear.png");
+  clearButton.className = "close";
+  clearButton.addEventListener("click", addClearButtonEvent);
+  let clearButtonContainer = document.createElement("div");
+  clearButtonContainer.appendChild(clearButton);
+  emojiWindowHead.appendChild(clearButtonContainer);
 
   closeButton = document.createElement("img");
   closeButton.src = chrome.extension.getURL("close.png");
   closeButton.className = "close";
   closeButton.addEventListener("click", addCloseButtonEvent);
-  emojiWindow.appendChild(closeButton);
+  let closeButtonContainer = document.createElement("div");
+  closeButtonContainer.style.textAlign = "right";
+  closeButtonContainer.appendChild(closeButton);
+  closeButtonContainer.style.flexGrow = 2;
+  emojiWindowHead.appendChild(closeButtonContainer);
 
   emojiList = document.createElement("div");
+  emojiList.style.width = "100%";
   emojiList.id = "emoji-list";
+
+  emojiWindow.appendChild(emojiWindowHead);
   emojiWindow.appendChild(emojiList);
 
   document.body.appendChild(emojiWindow);
@@ -56,7 +76,7 @@ function getEmojiList(evt) {
         let browEmoji = document.createElement("span");
         browEmoji.textContent = brow;
         browEmoji.className = "brow";
-        browEmoji.addEventListener("mousedown", copyEmoji);
+        browEmoji.addEventListener("mousedown", copyEmoji, true);
         fragment.appendChild(browEmoji);
       }
 
@@ -70,11 +90,10 @@ function addCloseButtonEvent(evt) {
   emojiWindow.style.display = "none";
 }
 
-addEmojiWindow();
-
-document.addEventListener("contextmenu", function (evt) {
-  getEmojiWindowPosition(evt);
-});
+function addClearButtonEvent(evt) {
+  searchTextBox.value = "Input Keyword here";
+  searchTextBox.className = "tip";
+}
 
 function getEmojiWindowPosition(evt) {
   chrome.runtime.sendMessage({ "pageX": evt.pageX, "pageY": evt.pageY }, function (message) {
@@ -89,6 +108,7 @@ function showEmojiWindow(pageX, pageY) {
 }
 
 function copyEmoji(evt) {
+  emojiWindow.draggable = false;
   let range = document.createRange();
   range.selectNode(evt.target);
   window.getSelection().removeAllRanges();
@@ -102,4 +122,28 @@ function copyEmoji(evt) {
     searchTextBox.value = oldSearchText;
     searchTextBox.className = "tip";
   }, 1000);
+  emojiWindow.draggable = true;
 }
+
+function drag_start(event) {
+    var style = window.getComputedStyle(event.target, null);
+    event.dataTransfer.setData("text/plain",
+    (parseInt(style.getPropertyValue("left"),10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - event.clientY));
+} 
+function drag_over(event) { 
+    event.preventDefault(); 
+    //return false; 
+} 
+function drop(event) { 
+    var offset = event.dataTransfer.getData("text/plain").split(',');
+    emojiWindow.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
+    emojiWindow.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
+    event.preventDefault();
+    //return false;
+} 
+
+addEmojiWindow();
+emojiWindow.addEventListener('dragstart',drag_start, true); //Thank to robertc(http://stackoverflow.com/questions/7278409/html5-drag-and-drop-to-move-a-div-anywhere-on-the-screen) 
+document.body.addEventListener('dragover',drag_over, true); 
+document.body.addEventListener('drop',drop, true);
+document.addEventListener("contextmenu", function (evt) {getEmojiWindowPosition(evt);});
