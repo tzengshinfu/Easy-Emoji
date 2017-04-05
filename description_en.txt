@@ -9,3 +9,6 @@ v1.1.0 Release Notes:
 v1.2.0 Release Notes:
 -Add emoji window draggable function.
 -Add search text clear button.
+
+v1.3.0 Release Notes:
+-Update to Emoji v5.0.

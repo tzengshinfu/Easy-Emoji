@@ -132,14 +132,14 @@ function drag_start(event) {
 } 
 function drag_over(event) { 
     event.preventDefault(); 
-    //return false; 
+    return false; 
 } 
 function drop(event) { 
     var offset = event.dataTransfer.getData("text/plain").split(',');
     emojiWindow.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
     emojiWindow.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
     event.preventDefault();
-    //return false;
+    return false;
 } 
 
 addEmojiWindow();
