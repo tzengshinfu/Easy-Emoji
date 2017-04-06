@@ -2645,7 +2645,7 @@ openRequest.onsuccess = function () {
 };
 
 openRequest.onerror = function () {
-    alert("create emojiTable error: " + openRequest.error);
+    indexedDB.deleteDatabase("emojiDatabase");
 };
 
 function getEmoji(keyword, callback) {
